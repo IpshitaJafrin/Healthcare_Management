@@ -1,0 +1,36 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Healthcare System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">HealthCare+</div>
+    <ul class="nav-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'register' %}">Register</a></li>
+        <li><a href="{% url 'login' %}">Login</a></li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Healthcare Management System</h1>
+        <p>Manage patients, doctors, and appointments efficiently.</p>
+
+        <div class="buttons">
+            <a href="{% url 'register' %}" class="btn">Get Started</a>
+            <a href="{% url 'login' %}" class="btn secondary">Login</a>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

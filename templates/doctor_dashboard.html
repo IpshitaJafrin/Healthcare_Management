@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Doctor Panel</h2>
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">My Profile</a></li>
+            <li><a href="#">Appointments</a></li>
+            <li><a href="#">Schedule Availability</a></li>
+            <li><a href="#">Consultation Notes</a></li>
+            <li><a href="#">Prescriptions</a></li>
+            <li><a href="#">Notifications</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <h2>Welcome, Dr. {{ request.user.username }}</h2>
+        </div>
+
+        <!-- Cards -->
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Appointments</h3>
+                <p>12</p>
+            </div>
+
+            <div class="card">
+                <h3>Today's Patients</h3>
+                <p>5</p>
+            </div>
+
+            <div class="card">
+                <h3>Pending Requests</h3>
+                <p>3</p>
+            </div>
+
+            <div class="card">
+                <h3>Notifications</h3>
+                <p>2</p>
+            </div>
+
+        </div>
+
+        <!-- Example Section -->
+        <div class="section">
+            <h3>Recent Activity</h3>
+            <p>You have a new patient appointment scheduled.</p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard | Jago Health</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Jago Health</h2>
+        <ul>
+            <li><a href="#">🏠 Dashboard</a></li>
+            <li><a href="#">👤 My Profile</a></li>
+            <li><a href="#">🩺 Find Doctors</a></li>
+            <li><a href="#">📅 Appointments</a></li>
+            <li><a href="#">💳 Payments</a></li>
+            <li><a href="#">📁 Medical Records</a></li>
+            <li><a href="#">💊 Prescriptions</a></li>
+            <li><a href="#">📊 Prediction History</a></li>
+            <li><a href="#">🔔 Notifications</a></li>
+            <li><a href="#">🚑 Emergency</a></li>
+            <li><a href="#">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <h2>Welcome, Patient 👋</h2>
+            <p>Manage your health records, appointments, and more.</p>
+        </div>
+
+        <!-- Cards -->
+        <div class="cards">
+            <div class="card">
+                <h3>Upcoming Appointments</h3>
+                <p>2</p>
+            </div>
+            <div class="card">
+                <h3>Reports</h3>
+                <p>5</p>
+            </div>
+            <div class="card">
+                <h3>Prescriptions</h3>
+                <p>3</p>
+            </div>
+            <div class="card">
+                <h3>Pending Payments</h3>
+                <p>1</p>
+            </div>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <div class="section">
+            <h3>Upcoming Appointments</h3>
+            <table>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Dr. Rahman (Cardiologist)</td>
+                    <td>12 Apr 2026</td>
+                    <td>5:00 PM</td>
+                    <td class="status confirmed">Confirmed</td>
+                </tr>
+                <tr>
+                    <td>Dr. Ahmed (Dermatologist)</td>
+                    <td>15 Apr 2026</td>
+                    <td>2:00 PM</td>
+                    <td class="status pending">Pending</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Medical Records -->
+        <div class="section">
+            <h3>Medical Records</h3>
+            <ul class="records">
+                <li>
+                    Blood Test Report - <span>10 Apr 2026</span>
+                    <button>Download</button>
+                </li>
+                <li>
+                    X-Ray Chest - <span>05 Apr 2026</span>
+                    <button>Download</button>
+                </li>
+            </ul>
+            <button class="upload-btn">Upload New Report</button>
+        </div>
+
+        <!-- Doctor Availability -->
+        <div class="section">
+            <h3>Available Doctors</h3>
+            <div class="doctor-list">
+                <div class="doctor-card">
+                    <h4>Dr. Hasan</h4>
+                    <p>Cardiologist</p>
+                    <span class="available">Available Today</span>
+                    <button>Book Appointment</button>
+                </div>
+                <div class="doctor-card">
+                    <h4>Dr. Sultana</h4>
+                    <p>Gynecologist</p>
+                    <span class="busy">Fully Booked</span>
+                    <button disabled>Unavailable</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments -->
+        <div class="section">
+            <h3>Payment History</h3>
+            <table>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Dr. Rahman</td>
+                    <td>$30</td>
+                    <td class="status paid">Paid</td>
+                </tr>
+                <tr>
+                    <td>Dr. Ahmed</td>
+                    <td>$25</td>
+                    <td class="status pending">Pending</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Notifications -->
+        <div class="section">
+            <h3>Notifications</h3>
+            <ul class="notifications">
+                <li>Your appointment is confirmed.</li>
+                <li>New lab report uploaded.</li>
+                <li>Payment reminder pending.</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
