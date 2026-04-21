@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Doctors</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="{% url 'admin_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'verify_doctors' %}">👨‍⚕️ Verify Doctors</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <h2>Doctor Verification</h2>
+        </div>
+
+        <div class="section">
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Specialization</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.username }}</td>
+                    <td>{{ doctor.email }}</td>
+                    <td>{{ doctor.specialization }}</td>
+                    <td>
+                        <a href="{% url 'approve_doctor' doctor.id %}">
+                            <button class="approve">Approve</button>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No pending doctors</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -47,15 +47,19 @@ def user_login(request):
 
         user = authenticate(request, username=username, password=password)
 
+        print("DEBUG USER:", user)  
+
         if user is not None:
             login(request, user)
 
             # Role-based redirect
             if user.role == 'doctor':
-                return redirect('doctor_dashboard')
+                 if not user.is_verified:
+                  return render(request, 'login.html', {'error': 'Doctor not verified yet'})
+                 return redirect('doctor_dashboard')
             elif user.role == 'patient':
                 return redirect('patient_dashboard')
-            else:
+            elif request.user.is_superuser:
                 return redirect('admin_dashboard')
 
         else:
@@ -75,3 +79,34 @@ def user_logout(request):
 
 def patient_dashboard(request):
     return render(request, 'patient_dashboard.html')
+
+
+
+# views.py
+
+@login_required
+def verify_doctors(request):
+    if not request.user.is_superuser:
+        return redirect('login')
+
+
+    doctors = CustomUser.objects.filter(role='doctor', is_verified=False)
+    return render(request, 'verify_doctors.html', {'doctors': doctors})
+
+
+@login_required
+def approve_doctor(request, user_id):
+    if not request.user.is_superuser:
+        return redirect('login')
+
+    
+    doctor = CustomUser.objects.get(id=user_id)
+    doctor.is_verified = True
+    doctor.save()
+    return redirect('verify_doctors')
+
+
+@login_required
+def admin_dashboard(request):
+
+    return render(request, 'admin_dashboard.html')

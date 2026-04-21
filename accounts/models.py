@@ -16,3 +16,5 @@ class CustomUser(AbstractUser):
 
     # Patient fields
     age = models.IntegerField(blank=True, null=True)
+
+    is_verified = models.BooleanField(default=False)
