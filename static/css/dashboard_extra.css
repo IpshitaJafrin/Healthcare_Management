@@ -1,0 +1,115 @@
+/* General */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f1f5f9;
+    margin: 0;
+}
+
+/* Container */
+.container {
+    width: 500px;
+    margin: 50px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Titles */
+h2, h3 {
+    text-align: center;
+    color: #1e3a8a;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+input:focus, select:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* Buttons */
+button {
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th {
+    background: #1e3a8a;
+    color: white;
+    padding: 10px;
+}
+
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Status */
+.status {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.pending { background: #fde68a; }
+.approved { background: #bbf7d0; }
+.rejected { background: #fecaca; }
+.cancelled { background: #e5e7eb; }
+
+/* Action buttons */
+.approve {
+    background: #22c55e;
+}
+
+.reject {
+    background: #ef4444;
+}
+
+.cancel {
+    background: #f59e0b;
+}
+
+/* Card-style section */
+.section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Center form page */
+.center-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}

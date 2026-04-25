@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Patient Dashboard | Jago Health</title>
+    
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
 </head>
 <body>
 
@@ -17,7 +19,7 @@
             <li><a href="#">🏠 Dashboard</a></li>
             <li><a href="#">👤 My Profile</a></li>
             <li><a href="#">🩺 Find Doctors</a></li>
-            <li><a href="#">📅 Appointments</a></li>
+            <li><a href="{% url 'book_appointment' %}">📅 Book Appointment</a></li>
             <li><a href="#">💳 Payments</a></li>
             <li><a href="#">📁 Medical Records</a></li>
             <li><a href="#">💊 Prescriptions</a></li>
@@ -59,28 +61,50 @@
 
         <!-- Upcoming Appointments -->
         <div class="section">
-            <h3>Upcoming Appointments</h3>
-            <table>
-                <tr>
-                    <th>Doctor</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>Dr. Rahman (Cardiologist)</td>
-                    <td>12 Apr 2026</td>
-                    <td>5:00 PM</td>
-                    <td class="status confirmed">Confirmed</td>
-                </tr>
-                <tr>
-                    <td>Dr. Ahmed (Dermatologist)</td>
-                    <td>15 Apr 2026</td>
-                    <td>2:00 PM</td>
-                    <td class="status pending">Pending</td>
-                </tr>
-            </table>
-        </div>
+    <h3>My Appointments</h3>
+
+    <table>
+        <tr>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for appt in appointments %}
+        <tr>
+            <td>{{ appt.doctor.username }}</td>
+            <td>{{ appt.date }}</td>
+            <td class="{{ appt.status }}">{{ appt.status }}</td>
+            <td>
+    {% if appt.status == 'approved' %}
+
+        {% if appt.id in paid_appointments %}
+            <button class="paid-btn" disabled>✔ Already Paid</button>
+        {% else %}
+            <a href="{% url 'make_payment' appt.id %}">
+                <button class="pay-btn">💳 Pay</button>
+            </a>
+
+            <a href="{% url 'cancel_appointment' appt.id %}">
+                <button class="cancel-btn">Cancel</button>
+            </a>
+        {% endif %}
+
+    {% elif appt.status == 'pending' %}
+        <span class="status pending">Waiting</span>
+
+    {% elif appt.status == 'rejected' %}
+        <span class="status rejected">Rejected</span>
+
+    {% elif appt.status == 'cancelled' %}
+        <span class="status cancelled">Cancelled</span>
+    {% endif %}
+</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
         <!-- Medical Records -->
         <div class="section">

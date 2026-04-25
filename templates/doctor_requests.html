@@ -1,0 +1,33 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+
+<h2>Appointment Requests</h2>
+
+<table>
+<tr>
+    <th>Patient</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for appt in appointments %}
+<tr>
+    <td>{{ appt.patient.username }}</td>
+    <td>{{ appt.date }}</td>
+    <td>{{ appt.time }}</td>
+    <td class="{{ appt.status }}">{{ appt.status }}</td>
+   <td>
+    {% if appt.status == 'pending' %}
+        <a href="{% url 'approve_appointment' appt.id %}">
+            <button class="approve">Approve</button>
+        </a>
+        <a href="{% url 'reject_appointment' appt.id %}">
+            <button class="reject">Reject</button>
+        </a>
+    {% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>

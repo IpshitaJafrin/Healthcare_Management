@@ -4,7 +4,7 @@ from .models import CustomUser
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-
+from .models import CustomUser, Appointment, Payment
 
 def home(request):
     return render(request, 'home.html')
@@ -77,9 +77,16 @@ def user_logout(request):
     logout(request)
     return redirect('home')
 
+@login_required
 def patient_dashboard(request):
-    return render(request, 'patient_dashboard.html')
+    appointments = Appointment.objects.filter(patient=request.user)
 
+    paid_appointments = Payment.objects.values_list('appointment_id', flat=True)
+
+    return render(request, 'patient_dashboard.html', {
+        'appointments': appointments,
+        'paid_appointments': paid_appointments
+    })
 
 
 # views.py
@@ -110,3 +117,97 @@ def approve_doctor(request, user_id):
 def admin_dashboard(request):
 
     return render(request, 'admin_dashboard.html')
+
+
+@login_required
+def admin_dashboard(request):
+    total_doctors = CustomUser.objects.filter(role='doctor').count()
+    total_patients = CustomUser.objects.filter(role='patient').count()
+    pending_doctors = CustomUser.objects.filter(role='doctor', is_verified=False).count()
+
+    context = {
+        'total_doctors': total_doctors,
+        'total_patients': total_patients,
+        'pending_doctors': pending_doctors,
+    }
+
+    return render(request, 'admin_dashboard.html', context)
+
+
+
+# Patient : Book Appoinment
+
+@login_required
+def book_appointment(request):
+    doctors = CustomUser.objects.filter(role='doctor', is_verified=True)
+
+    if request.method == 'POST':
+        doctor_id = request.POST['doctor']
+        date = request.POST['date']
+        time = request.POST['time']
+
+        Appointment.objects.create(
+            patient=request.user,
+            doctor_id=doctor_id,
+            date=date,
+            time=time
+        )
+
+        return redirect('patient_dashboard')
+
+    return render(request, 'book_appointment.html', {'doctors': doctors})
+
+
+
+# DOCTOR: APPROVE / REJECT
+
+@login_required
+def doctor_requests(request):
+    appointments = Appointment.objects.filter(doctor=request.user)
+
+    return render(request, 'doctor_requests.html', {'appointments': appointments})
+
+
+def approve_appointment(request, id):
+    appt = Appointment.objects.get(id=id)
+    appt.status = 'approved'
+    appt.save()
+    return redirect('doctor_requests')
+
+
+def reject_appointment(request, id):
+    appt = Appointment.objects.get(id=id)
+    appt.status = 'rejected'
+    appt.save()
+    return redirect('doctor_requests')
+
+
+
+# PAYMENT (AFTER APPROVAL)
+
+@login_required
+def make_payment(request, appointment_id):
+    appointment = Appointment.objects.get(id=appointment_id)
+
+    if request.method == 'POST':
+        Payment.objects.create(
+            appointment=appointment,
+            amount=500,
+            is_paid=True
+        )
+        return redirect('patient_dashboard')
+
+    return render(request, 'payment.html', {
+        'appointment': appointment
+    })
+
+
+@login_required
+def cancel_appointment(request, id):
+    appt = Appointment.objects.get(id=id)
+
+    if appt.patient == request.user:
+        appt.status = 'cancelled'
+        appt.save()
+
+    return redirect('patient_dashboard')

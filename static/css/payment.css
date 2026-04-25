@@ -1,0 +1,71 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #dbeafe, #ecfeff);
+}
+
+/* Center layout */
+.payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Card */
+.payment-card {
+    background: white;
+    padding: 30px;
+    width: 380px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.1);
+}
+
+.payment-card h2 {
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 20px;
+}
+
+/* Details */
+.details p {
+    margin: 5px 0;
+    color: #334155;
+}
+
+.amount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #16a34a;
+    margin-top: 10px;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+/* Row */
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}

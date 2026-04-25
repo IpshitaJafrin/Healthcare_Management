@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+</head>
+<body>
+
+<div class="payment-container">
+
+    <div class="payment-card">
+        <h2>💳 Complete Payment</h2>
+
+        <div class="details">
+            <p><strong>Doctor:</strong> {{ appointment.doctor.username }}</p>
+            <p><strong>Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Time:</strong> {{ appointment.time }}</p>
+            <p class="amount">Amount: 500</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Card Number</label>
+            <input type="text" placeholder="1234 5678 9012 3456" required>
+
+            <div class="row">
+                <div>
+                    <label>Expiry</label>
+                    <input type="text" placeholder="MM/YY" required>
+                </div>
+
+                <div>
+                    <label>CVV</label>
+                    <input type="password" placeholder="123" required>
+                </div>
+            </div>
+
+            <button type="submit">Pay Now</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
