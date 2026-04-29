@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients</title>
+    <link rel="stylesheet" href="{% static 'css/doctor_list.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Patients</h1>
+
+    <!-- Search -->
+    <form method="GET" class="search-box">
+        <input type="text" name="q" placeholder="Search by name..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="card-grid">
+
+        {% for patient in patients %}
+        <div class="doctor-card">
+
+            <img src="{{ patient.profile_image.url }}" class="doctor-img">
+
+            <h2>{{ patient.username }}</h2>
+
+            <p class="specialty">Age: {{ patient.age }}</p>
+
+            <div class="info">
+                <p><strong>Phone:</strong> {{ patient.phone }}</p>
+                <p><strong>Bio:</strong> {{ patient.bio|truncatewords:15 }}</p>
+            </div>
+
+            
+
+        </div>
+        {% empty %}
+        <p>No patients found.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

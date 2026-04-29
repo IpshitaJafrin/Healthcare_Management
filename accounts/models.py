@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from django.conf import settings
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
@@ -13,19 +12,20 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     phone = models.CharField(max_length=15)
 
-    # Doctor fields
+    # Doctor-specific
     specialization = models.CharField(max_length=100, blank=True, null=True)
 
-    # Patient fields
+    # Patient-specific
     age = models.IntegerField(blank=True, null=True)
+
+    # Common profile fields
+    bio = models.TextField(blank=True)
+    profile_image = models.ImageField(upload_to='profiles/', default='default.png')
 
     is_verified = models.BooleanField(default=False)
 
-
-
-  
-
-User = settings.AUTH_USER_MODEL
+    def __str__(self):
+        return self.username
 
 
 class Appointment(models.Model):
@@ -36,8 +36,19 @@ class Appointment(models.Model):
         ('cancelled', 'Cancelled'),
     )
 
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointments')
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointments')
+    patient = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='patient_appointments',
+        limit_choices_to={'role': 'patient'}
+    )
+
+    doctor = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='doctor_appointments',
+        limit_choices_to={'role': 'doctor'}
+    )
 
     date = models.DateField()
     time = models.TimeField()
@@ -47,7 +58,7 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.patient} → {self.doctor} ({self.status})"
+        return f"{self.patient.username} → {self.doctor.username} ({self.status})"
 
 
 class Payment(models.Model):
@@ -56,3 +67,6 @@ class Payment(models.Model):
     is_paid = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment for {self.appointment}"

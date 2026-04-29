@@ -15,8 +15,12 @@
         {% endfor %}
     </select>
 
-    <input type="date" name="date" required>
+    <input type="date" name="date" min="{{ today }}" required>
     <input type="time" name="time" required>
+
+    {% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
 
     <button type="submit">Request Appointment</button>
 </form>

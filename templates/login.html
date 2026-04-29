@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Login - Healthcare</title>
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
@@ -17,10 +17,18 @@
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
 
+        <!-- ✅ Role Selection Added -->
+        <label>Login as:</label>
+        <select name="role" required>
+            <option value="" disabled selected>Select Role</option>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="admin">Admin</option>
+        </select>
+
         {% if error %}
             <p style="color: red;">{{ error }}</p>
         {% endif %}
-
 
         <button type="submit">Login</button>
     </form>

@@ -17,8 +17,8 @@
         <h2>Jago Health</h2>
         <ul>
             <li><a href="#">🏠 Dashboard</a></li>
-            <li><a href="#">👤 My Profile</a></li>
-            <li><a href="#">🩺 Find Doctors</a></li>
+            <li><a href="{% url 'profile' %}"">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_list' %}">🩺 Doctors</a></li>
             <li><a href="{% url 'book_appointment' %}">📅 Book Appointment</a></li>
             <li><a href="#">💳 Payments</a></li>
             <li><a href="#">📁 Medical Records</a></li>
@@ -26,7 +26,7 @@
             <li><a href="#">📊 Prediction History</a></li>
             <li><a href="#">🔔 Notifications</a></li>
             <li><a href="#">🚑 Emergency</a></li>
-            <li><a href="#">🚪 Logout</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
 
@@ -106,75 +106,7 @@
     </table>
 </div>
 
-        <!-- Medical Records -->
-        <div class="section">
-            <h3>Medical Records</h3>
-            <ul class="records">
-                <li>
-                    Blood Test Report - <span>10 Apr 2026</span>
-                    <button>Download</button>
-                </li>
-                <li>
-                    X-Ray Chest - <span>05 Apr 2026</span>
-                    <button>Download</button>
-                </li>
-            </ul>
-            <button class="upload-btn">Upload New Report</button>
-        </div>
-
-        <!-- Doctor Availability -->
-        <div class="section">
-            <h3>Available Doctors</h3>
-            <div class="doctor-list">
-                <div class="doctor-card">
-                    <h4>Dr. Hasan</h4>
-                    <p>Cardiologist</p>
-                    <span class="available">Available Today</span>
-                    <button>Book Appointment</button>
-                </div>
-                <div class="doctor-card">
-                    <h4>Dr. Sultana</h4>
-                    <p>Gynecologist</p>
-                    <span class="busy">Fully Booked</span>
-                    <button disabled>Unavailable</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payments -->
-        <div class="section">
-            <h3>Payment History</h3>
-            <table>
-                <tr>
-                    <th>Doctor</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>Dr. Rahman</td>
-                    <td>$30</td>
-                    <td class="status paid">Paid</td>
-                </tr>
-                <tr>
-                    <td>Dr. Ahmed</td>
-                    <td>$25</td>
-                    <td class="status pending">Pending</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Notifications -->
-        <div class="section">
-            <h3>Notifications</h3>
-            <ul class="notifications">
-                <li>Your appointment is confirmed.</li>
-                <li>New lab report uploaded.</li>
-                <li>Payment reminder pending.</li>
-            </ul>
-        </div>
-
-    </div>
-</div>
+       
 
 </body>
 </html>
