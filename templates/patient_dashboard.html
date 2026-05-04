@@ -17,15 +17,14 @@
         <h2>Jago Health</h2>
         <ul>
             <li><a href="#">🏠 Dashboard</a></li>
-            <li><a href="{% url 'profile' %}"">👤 My Profile</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
             <li><a href="{% url 'doctor_list' %}">🩺 Doctors</a></li>
             <li><a href="{% url 'book_appointment' %}">📅 Book Appointment</a></li>
-            <li><a href="#">💳 Payments</a></li>
-            <li><a href="#">📁 Medical Records</a></li>
-            <li><a href="#">💊 Prescriptions</a></li>
-            <li><a href="#">📊 Prediction History</a></li>
+            <li><a href="{% url 'patient_all_appointments' %}">📋 All Appointments</a></li>
+            <li><a href="{% url 'patient_prescriptions' %}">💊 Prescriptions</a></li>
+           
             <li><a href="#">🔔 Notifications</a></li>
-            <li><a href="#">🚑 Emergency</a></li>
+           
             <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
@@ -43,23 +42,24 @@
         <div class="cards">
             <div class="card">
                 <h3>Upcoming Appointments</h3>
-                <p>2</p>
+                <p>{{ appointments|length }}</p>
             </div>
             <div class="card">
                 <h3>Reports</h3>
-                <p>5</p>
+                <p>{{ total_reports }}</p>
             </div>
             <div class="card">
-                <h3>Prescriptions</h3>
-                <p>3</p>
+                <h3>Prescriptions</h3> 
+                <p>{{ prescription_count }}</p>
+                
             </div>
             <div class="card">
                 <h3>Pending Payments</h3>
-                <p>1</p>
+                <p>{{ total_pending_payments }}</p>
             </div>
         </div>
 
-        <!-- Upcoming Appointments -->
+        <!-- Upcoming Appointments 
         <div class="section">
     <h3>My Appointments</h3>
 
@@ -82,9 +82,9 @@
         {% if appt.id in paid_appointments %}
             <button class="paid-btn" disabled>✔ Already Paid</button>
         {% else %}
-            <a href="{% url 'make_payment' appt.id %}">
-                <button class="pay-btn">💳 Pay</button>
-            </a>
+            <a href="{% url 'make_payment' appt.id %}" class="pay-btn">
+    💳 Pay
+</a>
 
             <a href="{% url 'cancel_appointment' appt.id %}">
                 <button class="cancel-btn">Cancel</button>
@@ -103,7 +103,7 @@
 </td>
         </tr>
         {% endfor %}
-    </table>
+    </table>-->
 </div>
 
        

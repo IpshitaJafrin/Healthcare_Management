@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Appointments | Jago Health</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <link rel="stylesheet" href="{% static 'css/appointments.css' %}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🏥 Jago Health</h2>
+        <ul>
+            <li><a href="{% url 'patient_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_list' %}">🩺 Find Doctors</a></li>
+            <li><a href="{% url 'book_appointment' %}">📅 Book Appointment</a></li>
+            <li><a href="{% url 'patient_all_appointments' %}" class="active">📋 All Appointments</a></li>
+            <li><a href="{% url 'patient_prescriptions' %}">💊 Prescriptions</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-content">
+                <div>
+                    <h2>📋 My Appointments</h2>
+                    <p>View and manage all your booked appointments</p>
+                </div>
+                <div class="topbar-stats">
+                    <span class="stat-box">
+                        <strong>Total:</strong> {{ appointments|length }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div class="appointments-section">
+            
+            {% if appointments %}
+                <div class="appointments-grid">
+                    {% for appt in appointments %}
+                        <div class="appointment-card">
+                            <!-- Doctor Info -->
+                            <div class="card-header">
+                                <div class="doctor-info">
+                                    <h3>Dr. {{ appt.doctor.first_name|default:appt.doctor.username }}</h3>
+                                    <p class="specialization">📚 {{ appt.doctor.specialization|default:"General Practitioner" }}</p>
+                                </div>
+                                <span class="status-badge status-{{ appt.status|lower }}">
+                                    {{ appt.status|upper }}
+                                </span>
+                            </div>
+
+                            <!-- Appointment Details -->
+                            <div class="card-body">
+                                <div class="detail-row">
+                                    <span class="label">📅 Date:</span>
+                                    <span class="value">{{ appt.date|date:"M d, Y" }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">⏰ Time:</span>
+                                    <span class="value">{{ appt.time|time:"h:i A" }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">📞 Doctor Contact:</span>
+                                    <span class="value">{{ appt.doctor.phone }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">📧 Email:</span>
+                                    <span class="value">{{ appt.doctor.email }}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">🗓️ Booked On:</span>
+                                    <span class="value">{{ appt.created_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="card-actions">
+                                {% if appt.status == 'approved' %}
+                                    {% if appt.id in paid_appointments %}
+                                        <button class="btn-paid" disabled>
+                                            ✔ Payment Done
+                                        </button>
+                                    {% else %}
+                                        <a href="{% url 'make_payment' appt.id %}" class="btn-payment">
+                                            💳 Make Payment
+                                        </a>
+                                    {% endif %}
+                                    
+                                    <a href="{% url 'cancel_appointment' appt.id %}" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                        ❌ Cancel Appointment
+                                    </a>
+
+                                {% elif appt.status == 'pending' %}
+                                    <span class="btn-status-pending">⏳ Waiting for Doctor Approval</span>
+
+                                {% elif appt.status == 'rejected' %}
+                                    <span class="btn-status-rejected">❌ Rejected by Doctor</span>
+                                    <a href="{% url 'book_appointment' %}" class="btn-rebook">📅 Book Another</a>
+
+                                {% elif appt.status == 'cancelled' %}
+                                    <span class="btn-status-cancelled">🚫 Cancelled</span>
+                                    <a href="{% url 'book_appointment' %}" class="btn-rebook">📅 Book New Appointment</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>No Appointments Yet</h3>
+                    <p>You haven't booked any appointments with our doctors.</p>
+                    <a href="{% url 'book_appointment' %}" class="btn btn-primary">📅 Book Your First Appointment</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

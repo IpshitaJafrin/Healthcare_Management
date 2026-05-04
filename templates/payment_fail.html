@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Failed</title>
+    <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+</head>
+<body>
+
+<div class="payment-container">
+    <h2 style="color: red;">❌ Payment Failed</h2>
+
+    <p>Your payment could not be completed.</p>
+    <p>Please try again.</p>
+
+    <a href="{% url 'patient_dashboard' %}" class="back-btn">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

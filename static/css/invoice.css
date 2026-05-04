@@ -1,0 +1,151 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 20px;
+}
+
+.invoice-container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Header */
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h1 {
+    margin: 0;
+    color: #2c7be5;
+}
+
+.logo p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.invoice-info h2 {
+    margin: 0;
+    color: #333;
+}
+
+.invoice-info p {
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+/* Info Section */
+.info-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.info-box {
+    width: 48%;
+    background: #f9fbff;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.info-box h3 {
+    margin-bottom: 10px;
+    color: #2c7be5;
+}
+
+/* Table */
+.appointment-section {
+    margin-top: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th {
+    background: #2c7be5;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.status {
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+/* Total */
+.total-section {
+    text-align: right;
+    margin-top: 20px;
+    color: #2c7be5;
+}
+
+/* Footer */
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 13px;
+    color: #777;
+}
+
+/* Buttons */
+.actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background: #2c7be5;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1a5fd0;
+}
+
+.back-btn {
+    margin-left: 10px;
+    text-decoration: none;
+    padding: 10px 20px;
+    background: #6c757d;
+    color: white;
+    border-radius: 6px;
+}
+
+.back-btn:hover {
+    background: #545b62;
+}
+
+/* Print Style */
+@media print {
+    .actions {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .invoice-container {
+        box-shadow: none;
+    }
+}

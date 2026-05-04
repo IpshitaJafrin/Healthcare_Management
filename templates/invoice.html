@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="{% static 'css/invoice.css' %}">
+</head>
+<body>
+
+<div class="invoice-container">
+
+    <!-- Header -->
+    <div class="invoice-header">
+        <div class="logo">
+            <h1>HealthCare System</h1>
+            <p>Smart Medical Services</p>
+        </div>
+
+        <div class="invoice-info">
+            <h2>INVOICE</h2>
+            <p><strong>ID:</strong> {{ payment.transaction_id }}</p>
+            <p><strong>Date:</strong> {{ payment.paid_at }}</p>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <hr>
+
+    <!-- Patient & Doctor Info -->
+    <div class="info-section">
+        <div class="info-box">
+            <h3>Patient Info</h3>
+            <p><strong>Name:</strong> {{ appointment.patient.username }}</p>
+            <p><strong>Phone:</strong> {{ appointment.patient.phone }}</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Doctor Info</h3>
+            <p><strong>Name:</strong> {{ appointment.doctor.username }}</p>
+            <p><strong>Specialization:</strong> {{ appointment.doctor.specialization }}</p>
+        </div>
+    </div>
+
+    <!-- Appointment Details -->
+    <div class="appointment-section">
+        <h3>Appointment Details</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td class="status">{{ appointment.status }}</td>
+                    <td>৳ {{ payment.amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Total -->
+    <div class="total-section">
+        <h2>Total Paid: ৳ {{ payment.amount }}</h2>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Thank you for using our healthcare system.</p>
+        <p>This is a system-generated invoice.</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+        <button onclick="window.print()">Download / Print</button>
+        <a href="{% url 'patient_dashboard' %}" class="back-btn">Back</a>
+    </div>
+
+</div>
+
+</body>
+</html>

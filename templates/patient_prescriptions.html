@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescriptions | Jago Health</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <link rel="stylesheet" href="{% static 'css/appointments.css' %}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🏥 Jago Health</h2>
+        <ul>
+            <li><a href="{% url 'patient_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_list' %}">🩺 Find Doctors</a></li>
+            <li><a href="{% url 'book_appointment' %}">📅 Book Appointment</a></li>
+            <li><a href="{% url 'patient_all_appointments' %}">📋 All Appointments</a></li>
+            <li><a href="{% url 'patient_prescriptions' %}" class="active">💊 Prescriptions</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-content">
+                <div>
+                    <h2>💊 My Prescriptions</h2>
+                    <p>View and download prescriptions from your doctors</p>
+                </div>
+                <div class="topbar-stats">
+                    <span class="stat-box prescription-count">
+                        <strong>📊 Total Prescriptions:</strong> {{ prescription_count }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prescriptions Section -->
+        <div class="appointments-section prescriptions-section">
+            
+            {% if prescriptions %}
+                <div class="prescriptions-list">
+                    {% for prescription in prescriptions %}
+                        <div class="prescription-card">
+                            <!-- Prescription Header -->
+                            <div class="card-header prescription-header">
+                                <div class="prescription-title-info">
+                                    <h3>📋 {{ prescription.title }}</h3>
+                                    <p class="doctor-name">👨‍⚕️ Dr. {{ prescription.doctor.first_name|default:prescription.doctor.username }}</p>
+                                    <p class="doctor-spec">{{ prescription.doctor.specialization|default:"General Practitioner" }}</p>
+                                </div>
+                                <span class="date-badge">
+                                    📅 {{ prescription.created_at|date:"M d, Y" }}
+                                </span>
+                            </div>
+
+                            <!-- Prescription Details -->
+                            <div class="prescription-body">
+                                {% if prescription.description %}
+                                    <div class="description-box">
+                                        <h4>📝 Notes:</h4>
+                                        <p>{{ prescription.description }}</p>
+                                    </div>
+                                {% endif %}
+
+                                <div class="prescription-meta">
+                                    <div class="meta-item">
+                                        <span class="meta-label">📧 Doctor Email:</span>
+                                        <span class="meta-value">{{ prescription.doctor.email }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">📞 Doctor Phone:</span>
+                                        <span class="meta-value">{{ prescription.doctor.phone }}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">🔗 File:</span>
+                                        <span class="meta-value">{{ prescription.prescription_file.name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download Action -->
+                            <div class="card-actions prescription-actions">
+                                <a href="{% url 'download_prescription' prescription.id %}" class="btn-download">
+                                    ⬇️ Download Prescription
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>No Prescriptions Yet</h3>
+                    <p>Your doctors haven't uploaded any prescriptions yet. Once they do, you'll see them here.</p>
+                    <a href="{% url 'patient_all_appointments' %}" class="btn btn-primary">📋 View Your Appointments</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .prescription-count {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+    }
+
+    .prescription-count strong {
+        color: white;
+    }
+
+    .prescriptions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .prescription-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .prescription-card:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+    }
+
+    .prescription-header {
+        background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 100%);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .prescription-title-info h3 {
+        color: #1e3a8a;
+        margin-bottom: 8px;
+        font-size: 18px;
+    }
+
+    .doctor-name {
+        color: #475569;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .doctor-spec {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .date-badge {
+        background: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: #64748b;
+        font-weight: 600;
+        white-space: nowrap;
+        border: 1px solid #e2e8f0;
+    }
+
+    .prescription-body {
+        padding: 20px;
+    }
+
+    .description-box {
+        background: #f8fafc;
+        padding: 15px;
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .description-box h4 {
+        color: #1e3a8a;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .description-box p {
+        color: #475569;
+        line-height: 1.6;
+    }
+
+    .prescription-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .meta-label {
+        font-weight: 600;
+        color: #1e3a8a;
+        font-size: 13px;
+    }
+
+    .meta-value {
+        color: #475569;
+        font-size: 14px;
+    }
+
+    .prescription-actions {
+        padding: 15px 20px;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-download {
+        display: inline-block;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .prescription-header {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .prescription-meta {
+            grid-template-columns: 1fr;
+        }
+
+        .date-badge {
+            align-self: flex-start;
+        }
+    }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approved Appointments | Jago Health</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <link rel="stylesheet" href="{% static 'css/appointments.css' %}">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🏥 Doctor Panel</h2>
+        <ul>
+            <li><a href="{% url 'doctor_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_requests' %}">📨 Appointment Requests</a></li>
+            <li><a href="{% url 'doctor_approved_appointments' %}" class="active">✅ Approved Appointments</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-content">
+                <div>
+                    <h2>✅ Approved Appointments</h2>
+                    <p>Manage patient appointments and upload prescriptions</p>
+                </div>
+                <div class="topbar-stats">
+                    <span class="stat-box">
+                        <strong>Total:</strong> {{ appointments|length }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div class="appointments-section">
+            
+            {% if appointments %}
+                <div class="appointments-grid">
+                    {% for appt in appointments %}
+                        <div class="appointment-card">
+                            <!-- Patient Info -->
+                            <div class="card-header">
+                                <div class="patient-info">
+                                    <h3>👤 {{ appt.patient.first_name|default:appt.patient.username }}</h3>
+                                    <p class="patient-email">📧 {{ appt.patient.email }}</p>
+                                </div>
+                                <span class="status-badge status-approved">
+                                    ✅ APPROVED
+                                </span>
+                            </div>
+
+                            <!-- Patient Details -->
+                            <div class="card-body">
+                                <div class="detail-section">
+                                    <h4>📋 Patient Information</h4>
+                                    <div class="detail-row">
+                                        <span class="label">👤 Name:</span>
+                                        <span class="value">{{ appt.patient.first_name|default:appt.patient.username }}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">📞 Phone:</span>
+                                        <span class="value">{{ appt.patient.phone }}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">🧑 Age:</span>
+                                        <span class="value">{{ appt.patient.age|default:"N/A" }} years</span>
+                                    </div>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h4>📅 Appointment Details</h4>
+                                    <div class="detail-row">
+                                        <span class="label">📅 Date:</span>
+                                        <span class="value">{{ appt.date|date:"M d, Y" }}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">⏰ Time:</span>
+                                        <span class="value">{{ appt.time|time:"h:i A" }}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">📌 Status:</span>
+                                        {% if appt.status == 'cancelled' %}
+                                            <span class="value cancelled">🚫 Cancelled by Patient</span>
+                                        {% else %}
+                                            <span class="value approved">✅ Approved</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if appt.patient.bio %}
+                                    <div class="detail-section">
+                                        <h4>📝 Patient Bio</h4>
+                                        <p>{{ appt.patient.bio }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="card-actions">
+                                {% if appt.status != 'cancelled' %}
+                                    <a href="{% url 'upload_prescription' appt.id %}" class="btn-prescription">
+                                        📄 Upload Prescription
+                                    </a>
+                                {% else %}
+                                    <span class="btn-status-cancelled">🚫 Appointment Cancelled</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>No Approved Appointments</h3>
+                    <p>You don't have any approved appointments at the moment.</p>
+                    <a href="{% url 'doctor_requests' %}" class="btn btn-primary">📨 Review Patient Requests</a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

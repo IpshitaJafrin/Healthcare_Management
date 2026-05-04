@@ -16,9 +16,9 @@
             <li><a href="#">Dashboard</a></li>
             <li><a href="{% url 'profile' %}">My Profile</a></li>
             <li><a href="{% url 'doctor_requests' %}">📨 Patient Appointment Requests</a></li>
+            <li><a href="{% url 'doctor_approved_appointments' %}">✅ Approved Appointments</a></li>
             <li><a href="#">Schedule Availability</a></li>
             <li><a href="#">Consultation Notes</a></li>
-            <li><a href="#">Prescriptions</a></li>
             <li><a href="#">Notifications</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
         </ul>
@@ -33,35 +33,52 @@
         </div>
 
         <!-- Cards -->
-        <div class="cards">
+        <div class="cards"><div class="card">
+    <h3>Total Appointments</h3>
+    <p>{{ total_appointments }}</p>
+</div>
 
-            <div class="card">
-                <h3>Total Appointments</h3>
-                <p>12</p>
-            </div>
+<div class="card">
+    <h3>Today's Patients</h3>
+    <p>{{ today_patients }}</p>
+</div>
 
-            <div class="card">
-                <h3>Today's Patients</h3>
-                <p>5</p>
-            </div>
+<div class="card">
+    <h3>Pending Requests</h3>
+    <p>{{ pending_requests }}</p>
+</div>
 
-            <div class="card">
-                <h3>Pending Requests</h3>
-                <p>3</p>
-            </div>
+<div class="card">
+    <h3>Notifications</h3>
+    <p>{{ paid_appointments|length }}</p>
+</div>
 
-            <div class="card">
-                <h3>Notifications</h3>
-                <p>2</p>
-            </div>
 
+
+
+</div>
+ <!-- Sidebar 
+<div class="notifications">
+
+    <h3>Recent Payments</h3>
+
+    {% for appt in paid_appointments %}
+        <div class="notification-card">
+            <p>
+                💰 Payment received from 
+                <strong>{{ appt.patient.username }}</strong>
+            </p>
+            <p><strong>Date:</strong> {{ appt.date }}</p>
+            <p><strong>Time:</strong> {{ appt.time }}</p>
+            <p style="color: green;">✔ Paid</p>
         </div>
+    {% empty %}
+        <p>No new payments.</p>
+    {% endfor %}
 
-        <!-- Example Section -->
-        <div class="section">
-            <h3>Recent Activity</h3>
-            <p>You have a new patient appointment scheduled.</p>
-        </div>
+</div>-->
+
+
 
     </div>
 </div>

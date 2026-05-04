@@ -66,7 +66,28 @@ class Payment(models.Model):
     amount = models.FloatField(default=500)
     is_paid = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    
+    transaction_id = models.CharField(max_length=100, blank=True)
+    paid_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Payment for {self.appointment}"
+
+
+class Prescription(models.Model):
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='prescriptions')
+    doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='prescriptions_created', limit_choices_to={'role': 'doctor'})
+    patient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='prescriptions_received', limit_choices_to={'role': 'patient'})
+    
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    prescription_file = models.FileField(upload_to='prescriptions/')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Prescription: {self.title} - {self.patient.username} by Dr. {self.doctor.username}"

@@ -21,6 +21,16 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('doctors/', views.doctor_list, name='doctor_list'),
     path('patients/', views.patient_list, name='patient_list'),
-
+    path('invoice/<int:appointment_id>/', views.invoice, name='invoice'),
+    path('payment-success/', views.payment_success, name='payment_success'),
+    path('payment-fail/', views.payment_fail, name='payment_fail'),
+    path('payment-cancel/', views.payment_cancel, name='payment_cancel'),
+    
+    
+    path('appointments/all/', views.patient_all_appointments, name='patient_all_appointments'),
+    path('doctor-appointments/approved/', views.doctor_approved_appointments, name='doctor_approved_appointments'),
+    path('prescription/upload/<int:appointment_id>/', views.upload_prescription, name='upload_prescription'),
+    path('prescriptions/', views.patient_prescriptions, name='patient_prescriptions'),
+    path('prescription/download/<int:prescription_id>/', views.download_prescription, name='download_prescription'),
 ]
 
