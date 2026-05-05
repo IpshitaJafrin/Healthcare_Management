@@ -11,16 +11,14 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Doctor Panel</h2>
+        <h2>🏥 Doctor Panel</h2>
         <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="{% url 'profile' %}">My Profile</a></li>
-            <li><a href="{% url 'doctor_requests' %}">📨 Patient Appointment Requests</a></li>
+            <li><a href="{% url 'doctor_dashboard' %}" class="active">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_requests' %}">📨 Appointment Requests</a></li>
             <li><a href="{% url 'doctor_approved_appointments' %}">✅ Approved Appointments</a></li>
-            <li><a href="#">Schedule Availability</a></li>
-            <li><a href="#">Consultation Notes</a></li>
-            <li><a href="#">Notifications</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'doctor_consulted_appointments' %}">✔ Consulted Appointments</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
 

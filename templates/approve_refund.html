@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Refund | Admin</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <style>
+        .approve-container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .approve-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .approve-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .details-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-row .value {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40,167,69,0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        .info-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #155724;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🏥 Admin Panel</h2>
+        <ul>
+            <li><a href="{% url 'admin_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'verify_doctors' %}">✅ Verify Doctors</a></li>
+            <li><a href="{% url 'admin_doctor_list' %}">👨‍⚕️ Doctors</a></li>
+            <li><a href="{% url 'admin_refund_requests' %}" class="active">💰 Refund Requests</a></li>
+            <li><a href="{% url 'admin_payment_reports' %}">📊 Payment Reports</a></li>
+            <li><a href="{% url 'patient_list' %}">👥 Patients</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="topbar">
+            <h2>✓ Approve Refund</h2>
+            <p>Review and approve the refund request</p>
+        </div>
+
+        <div class="approve-container">
+            <div class="approve-header">
+                <div class="success-icon">✓</div>
+                <h2>Approve Refund Request</h2>
+            </div>
+
+            <div class="info-box">
+                <p>✓ You are about to approve this refund request. The patient will be notified of the approval.</p>
+            </div>
+
+            <!-- Payment Details -->
+            <div class="details-section">
+                <h4 style="margin-top: 0;">Payment Details</h4>
+                <div class="detail-row">
+                    <span class="label">Patient:</span>
+                    <span class="value">{{ payment.appointment.patient.get_full_name|default:payment.appointment.patient.username }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Doctor:</span>
+                    <span class="value">{{ payment.appointment.doctor.get_full_name|default:payment.appointment.doctor.username }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Original Amount:</span>
+                    <span class="value">{{ payment.amount }} BDT</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Refund Amount:</span>
+                    <span class="value"><strong style="color: #28a745;">{{ payment.refund_amount }} BDT</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Refund Reason:</span>
+                    <span class="value">{{ payment.refund_reason|truncatewords:20 }}</span>
+                </div>
+            </div>
+
+            <!-- Approval Form -->
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="notes">Admin Notes (Optional)</label>
+                    <textarea name="notes" id="notes" placeholder="Add any notes about this refund approval..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">✓ Confirm Approval</button>
+                    <a href="{% url 'admin_refund_requests' %}" class="cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

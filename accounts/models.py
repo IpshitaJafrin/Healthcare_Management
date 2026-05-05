@@ -36,6 +36,12 @@ class Appointment(models.Model):
         ('cancelled', 'Cancelled'),
     )
 
+    CONSULTATION_CHOICES = (
+        ('upcoming', 'Upcoming'),
+        ('consulted', 'Consulted'),
+        ('no-show', 'No Show'),
+    )
+
     patient = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -54,6 +60,7 @@ class Appointment(models.Model):
     time = models.TimeField()
 
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    consultation_status = models.CharField(max_length=20, choices=CONSULTATION_CHOICES, default='upcoming')
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -62,13 +69,28 @@ class Appointment(models.Model):
 
 
 class Payment(models.Model):
+    REFUND_STATUS_CHOICES = (
+        ('none', 'No Refund'),
+        ('requested', 'Refund Requested'),
+        ('approved', 'Refund Approved'),
+        ('rejected', 'Refund Rejected'),
+        ('completed', 'Refund Completed'),
+    )
+
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
     amount = models.FloatField(default=500)
     is_paid = models.BooleanField(default=False)
-
     
     transaction_id = models.CharField(max_length=100, blank=True)
     paid_at = models.DateTimeField(auto_now_add=True)
+
+    # Refund fields
+    refund_status = models.CharField(max_length=20, choices=REFUND_STATUS_CHOICES, default='none')
+    refund_requested_at = models.DateTimeField(null=True, blank=True)
+    refund_amount = models.FloatField(null=True, blank=True)
+    refund_reason = models.TextField(blank=True)
+    refund_admin_notes = models.TextField(blank=True)
+    refund_processed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Payment for {self.appointment}"

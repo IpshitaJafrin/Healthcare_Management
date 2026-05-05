@@ -1,36 +1,257 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Requests | Doctor Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <link rel="stylesheet" href="{% static 'css/appointments.css' %}">
+    <style>
+        .request-card {
+            background: white;
+            border: 2px solid #fff3cd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
 
+        .request-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
 
+        .request-card h3 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+        }
 
+        .pending-badge {
+            background: #ffc107;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
 
-<h2>Appointment Requests</h2>
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
 
-<table>
-<tr>
-    <th>Patient</th>
-    <th>Date</th>
-    <th>Time</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
 
-{% for appt in appointments %}
-<tr>
-    <td>{{ appt.patient.username }}</td>
-    <td>{{ appt.date }}</td>
-    <td>{{ appt.time }}</td>
-    <td class="{{ appt.status }}">{{ appt.status }}</td>
-   <td>
-    {% if appt.status == 'pending' %}
-        <a href="{% url 'approve_appointment' appt.id %}">
-            <button class="approve">Approve</button>
-        </a>
-        <a href="{% url 'reject_appointment' appt.id %}">
-            <button class="reject">Reject</button>
-        </a>
-    {% endif %}
-</td>
-</tr>
-{% endfor %}
-</table>
+        .info-item .label {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .info-item .value {
+            color: #333;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+
+        .appointment-details {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .appointment-details h4 {
+            margin: 0 0 10px 0;
+            color: #004085;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            color: #004085;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .approve-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .approve-btn:hover {
+            background: #218838;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🏥 Doctor Panel</h2>
+        <ul>
+            <li><a href="{% url 'doctor_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_requests' %}" class="active">📨 Appointment Requests</a></li>
+            <li><a href="{% url 'doctor_approved_appointments' %}">✅ Approved Appointments</a></li>
+            <li><a href="{% url 'doctor_consulted_appointments' %}">✔ Consulted Appointments</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-content">
+                <div>
+                    <h2>📨 Appointment Requests</h2>
+                    <p>Review and manage patient appointment requests</p>
+                </div>
+                <div class="topbar-stats">
+                    <span class="stat-box">
+                        <strong>Pending:</strong> {{ appointments|length }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests List -->
+        {% if appointments %}
+            <div class="requests-section">
+                {% for appt in appointments %}
+                    <div class="request-card">
+                        <div class="request-card-header">
+                            <h3>👤 {{ appt.patient.get_full_name|default:appt.patient.username }}</h3>
+                            <span class="pending-badge">🕐 PENDING</span>
+                        </div>
+
+                        <!-- Patient Info -->
+                        <div class="patient-info">
+                            <div class="info-item">
+                                <span class="label">Patient Name</span>
+                                <span class="value">{{ appt.patient.get_full_name|default:appt.patient.username }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Email</span>
+                                <span class="value">{{ appt.patient.email }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Phone</span>
+                                <span class="value">{{ appt.patient.phone }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Age</span>
+                                <span class="value">{{ appt.patient.age|default:"N/A" }} years</span>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Details -->
+                        <div class="appointment-details">
+                            <h4>📅 Appointment Details</h4>
+                            <div class="detail-item">
+                                <span class="label">Date:</span>
+                                <span>{{ appt.date|date:"M d, Y" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Time:</span>
+                                <span>{{ appt.time|time:"h:i A" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">Request Created:</span>
+                                <span>{{ appt.created_at|date:"M d, Y h:i A" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Patient Bio (if available) -->
+                        {% if appt.patient.bio %}
+                            <div style="background: #f0f8ff; border-left: 4px solid #17a2b8; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 8px 0; color: #0c5460;">📝 Patient Notes</h4>
+                                <p style="margin: 0; color: #0c5460;">{{ appt.patient.bio }}</p>
+                            </div>
+                        {% endif %}
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <a href="{% url 'approve_appointment' appt.id %}" class="action-btn approve-btn">✓ Approve Appointment</a>
+                            <a href="{% url 'reject_appointment' appt.id %}" class="action-btn reject-btn">✕ Reject Appointment</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Appointment Requests</h3>
+                <p>You don't have any pending appointment requests at the moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

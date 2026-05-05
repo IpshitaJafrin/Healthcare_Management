@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Refund | Jago Health</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <style>
+        .refund-container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .refund-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .refund-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .appointment-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-row .value {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .warning-box p {
+            margin: 0;
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Jago Health</h2>
+        <ul>
+            <li><a href="{% url 'patient_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_list' %}">🩺 Doctors</a></li>
+            <li><a href="{% url 'book_appointment' %}">📅 Book Appointment</a></li>
+            <li><a href="{% url 'patient_all_appointments' %}">📋 All Appointments</a></li>
+            <li><a href="{% url 'patient_prescriptions' %}">💊 Prescriptions</a></li>
+            <li><a href="{% url 'patient_payment_reports' %}" class="active">📊 Payment Reports</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="topbar">
+            <h2>🔄 Request Refund</h2>
+            <p>Submit a refund request for your appointment payment</p>
+        </div>
+
+        <div class="refund-container">
+            <div class="refund-header">
+                <h2>💰 Refund Request</h2>
+            </div>
+
+            <div class="warning-box">
+                <p>⚠️ Please provide a valid reason for your refund request. The admin will review your request and either approve or deny it.</p>
+            </div>
+
+            <!-- Appointment Details -->
+            <div class="appointment-details">
+                <h4 style="margin-top: 0; color: #333;">Appointment Details</h4>
+                <div class="detail-row">
+                    <span class="label">Doctor Name:</span>
+                    <span class="value">{{ appointment.doctor.get_full_name|default:appointment.doctor.username }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Specialization:</span>
+                    <span class="value">{{ appointment.doctor.specialization|default:"N/A" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Appointment Date:</span>
+                    <span class="value">{{ appointment.date|date:"M d, Y" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Appointment Time:</span>
+                    <span class="value">{{ appointment.time|time:"h:i A" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Payment Amount:</span>
+                    <span class="value"><strong>{{ payment.amount }} BDT</strong></span>
+                </div>
+            </div>
+
+            <!-- Refund Form -->
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="reason">Reason for Refund *</label>
+                    <textarea name="reason" id="reason" placeholder="Please explain why you're requesting a refund..." required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">✓ Submit Refund Request</button>
+                    <a href="{% url 'patient_payment_reports' %}" class="cancel-btn">✕ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

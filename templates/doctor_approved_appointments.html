@@ -21,6 +21,7 @@
             <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
             <li><a href="{% url 'doctor_requests' %}">📨 Appointment Requests</a></li>
             <li><a href="{% url 'doctor_approved_appointments' %}" class="active">✅ Approved Appointments</a></li>
+            <li><a href="{% url 'doctor_consulted_appointments' %}">✔ Consulted Appointments</a></li>
             <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
         </ul>
     </div>
@@ -96,6 +97,24 @@
                                             <span class="value approved">✅ Approved</span>
                                         {% endif %}
                                     </div>
+                                    <div class="detail-row">
+                                        <span class="label">💳 Payment Status:</span>
+                                        {% with payment=appt.payment %}
+                                            {% if payment and payment.is_paid %}
+                                                <span class="value" style="color: #28a745; font-weight: 600;">✓ Paid ({{ payment.amount }} BDT)</span>
+                                            {% else %}
+                                                <span class="value" style="color: #ffc107; font-weight: 600;">⏳ Pending</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">✔ Consultation Status:</span>
+                                        {% if appt.consultation_status == 'consulted' %}
+                                            <span class="value" style="color: #28a745; font-weight: 600;">✓ Consulted</span>
+                                        {% else %}
+                                            <span class="value" style="color: #ffc107; font-weight: 600;">⏳ Upcoming</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
 
                                 {% if appt.patient.bio %}
@@ -109,6 +128,15 @@
                             <!-- Actions -->
                             <div class="card-actions">
                                 {% if appt.status != 'cancelled' %}
+                                    {% if appt.consultation_status == 'upcoming' %}
+                                        <a href="{% url 'mark_consultation_done' appt.id %}" class="btn-consultation" style="background: #28a745; color: white; padding: 8px 12px; display: inline-block; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
+                                            ✓ Consultation Done
+                                        </a><br>
+                                    {% else %}
+                                        <span style="display: inline-block; background: #d4edda; color: #155724; padding: 8px 12px; border-radius: 5px; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
+                                            ✓ Consulted
+                                        </span><br>
+                                    {% endif %}
                                     <a href="{% url 'upload_prescription' appt.id %}" class="btn-prescription">
                                         📄 Upload Prescription
                                     </a>

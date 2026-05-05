@@ -21,6 +21,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('doctors/', views.doctor_list, name='doctor_list'),
     path('patients/', views.patient_list, name='patient_list'),
+    path('admin-doctors/', views.admin_doctor_list, name='admin_doctor_list'),
     path('invoice/<int:appointment_id>/', views.invoice, name='invoice'),
     path('payment-success/', views.payment_success, name='payment_success'),
     path('payment-fail/', views.payment_fail, name='payment_fail'),
@@ -32,5 +33,19 @@ urlpatterns = [
     path('prescription/upload/<int:appointment_id>/', views.upload_prescription, name='upload_prescription'),
     path('prescriptions/', views.patient_prescriptions, name='patient_prescriptions'),
     path('prescription/download/<int:prescription_id>/', views.download_prescription, name='download_prescription'),
+    
+    # Refund routes
+    path('refund/request/<int:appointment_id>/', views.request_refund, name='request_refund'),
+    path('admin-refund-requests/', views.admin_refund_requests, name='admin_refund_requests'),
+    path('admin-refund/approve/<int:payment_id>/', views.approve_refund, name='approve_refund'),
+    path('admin-refund/cancel/<int:payment_id>/', views.cancel_refund, name='cancel_refund'),
+    
+    # Payment reports routes
+    path('payment-reports/', views.patient_payment_reports, name='patient_payment_reports'),
+    path('admin-payment-reports/', views.admin_payment_reports, name='admin_payment_reports'),
+    
+    # Consultation routes
+    path('consultation/mark-done/<int:appointment_id>/', views.mark_consultation_done, name='mark_consultation_done'),
+    path('doctor-appointments/consulted/', views.doctor_consulted_appointments, name='doctor_consulted_appointments'),
 ]
 

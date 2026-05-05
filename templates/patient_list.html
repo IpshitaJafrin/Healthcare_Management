@@ -3,46 +3,226 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Patients</title>
-    <link rel="stylesheet" href="{% static 'css/doctor_list.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients List | Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <style>
+        .search-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .search-box button {
+            padding: 12px 25px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #0056b3;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .patient-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .patient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .patient-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #f0f0f0;
+        }
+
+        .patient-card h2 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .patient-age {
+            color: #666;
+            font-size: 14px;
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+
+        .info {
+            font-size: 13px;
+            text-align: left;
+            margin: 15px 0;
+        }
+
+        .info p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #999;
+        }
+
+        .stats-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stats-section p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .stats-section strong {
+            color: #333;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
+<div class="dashboard">
 
-    <h1>Patients</h1>
-
-    <!-- Search -->
-    <form method="GET" class="search-box">
-        <input type="text" name="q" placeholder="Search by name..." value="{{ query }}">
-        <button type="submit">Search</button>
-    </form>
-
-    <div class="card-grid">
-
-        {% for patient in patients %}
-        <div class="doctor-card">
-
-            <img src="{{ patient.profile_image.url }}" class="doctor-img">
-
-            <h2>{{ patient.username }}</h2>
-
-            <p class="specialty">Age: {{ patient.age }}</p>
-
-            <div class="info">
-                <p><strong>Phone:</strong> {{ patient.phone }}</p>
-                <p><strong>Bio:</strong> {{ patient.bio|truncatewords:15 }}</p>
-            </div>
-
-            
-
-        </div>
-        {% empty %}
-        <p>No patients found.</p>
-        {% endfor %}
-
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🏥 Admin Panel</h2>
+        <ul>
+            <li><a href="{% url 'admin_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'verify_doctors' %}">✅ Verify Doctors</a></li>
+            <li><a href="{% url 'admin_doctor_list' %}">👨‍⚕️ Doctors</a></li>
+            <li><a href="{% url 'admin_refund_requests' %}">💰 Refund Requests</a></li>
+            <li><a href="{% url 'admin_payment_reports' %}">📊 Payment Reports</a></li>
+            <li><a href="{% url 'patient_list' %}" class="active">👥 Patients</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
     </div>
 
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Topbar -->
+        <div class="topbar">
+            <h2>👥 Patients List</h2>
+            <p>Browse and manage all patients in the system</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <p>Total Patients: <strong>{{ patients|length }}</strong></p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-container">
+            <form method="GET" class="search-box">
+                <input type="text" name="q" placeholder="🔍 Search patient by name..." value="{{ query }}">
+                <button type="submit">🔍 Search</button>
+            </form>
+        </div>
+
+        <!-- Patients Grid -->
+        {% if patients %}
+            <div class="card-grid">
+                {% for patient in patients %}
+                    <div class="patient-card">
+                        <img src="{{ patient.profile_image.url }}" class="patient-img" alt="{{ patient.username }}">
+
+                        <h2>{{ patient.get_full_name|default:patient.username }}</h2>
+
+                        <p class="patient-age">👤 Age: {{ patient.age|default:"N/A" }} years</p>
+
+                        <div class="info">
+                            <p><strong>📞 Phone:</strong> {{ patient.phone }}</p>
+                            <p><strong>📧 Email:</strong> {{ patient.email }}</p>
+                            {% if patient.bio %}
+                                <p><strong>📝 Bio:</strong> {{ patient.bio|truncatewords:15 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <span class="badge">✔ Active Patient</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <h3>No Patients Found</h3>
+                <p>Try searching with different keywords.</p>
+            </div>
+        {% endif %}
+    </div>
 </div>
 
 </body>

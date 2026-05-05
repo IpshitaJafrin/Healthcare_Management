@@ -6,6 +6,52 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+    <style>
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .amount-display {
+            padding: 15px;
+            background: #f0f8ff;
+            border-left: 4px solid #007bff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .amount-display p {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .amount-display strong {
+            color: #007bff;
+            font-size: 24px;
+        }
+
+        .notes {
+            color: #666;
+            font-size: 13px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,11 +64,31 @@
             <p><strong>Doctor:</strong> {{ appointment.doctor.username }}</p>
             <p><strong>Date:</strong> {{ appointment.date }}</p>
             <p><strong>Time:</strong> {{ appointment.time }}</p>
-            <p class="amount">Amount: 500</p>
         </div>
 
         <form method="POST">
             {% csrf_token %}
+
+            <!-- Custom Amount Input -->
+            <div class="input-group">
+                <label>💰 Payment Amount (BDT)</label>
+                <input type="number" 
+                       name="amount" 
+                       id="amount" 
+                       placeholder="Enter amount (e.g., 500)"
+                       min="1"
+                       step="0.01"
+                       value="500"
+                       required>
+                <div class="notes">
+                    💡 You can enter any amount you wish to pay for this appointment consultation.
+                </div>
+            </div>
+
+            <!-- Amount Summary -->
+            <div class="amount-display">
+                <p>Total Amount: <strong><span id="totalAmount">500</span> BDT</strong></p>
+            </div>
 
             <label>Card Number</label>
             <input type="text" placeholder="1234 5678 9012 3456" required>
@@ -39,11 +105,20 @@
                 </div>
             </div>
 
-            <button type="submit">Pay Now</button>
+            <button type="submit">Pay <span id="payAmount">500</span> BDT</button>
         </form>
     </div>
 
 </div>
+
+<script>
+    // Update amount display in real-time
+    document.getElementById('amount').addEventListener('input', function() {
+        const amount = parseFloat(this.value) || 0;
+        document.getElementById('totalAmount').textContent = amount > 0 ? amount : '0';
+        document.getElementById('payAmount').textContent = amount > 0 ? amount : '0';
+    });
+</script>
 
 </body>
 </html>

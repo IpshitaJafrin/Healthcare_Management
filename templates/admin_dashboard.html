@@ -12,19 +12,14 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h2>Admin Panel</h2>
+        <h2>🏥 Admin Panel</h2>
         <ul>
-            <li><a href="{% url 'admin_dashboard' %}">🏠 Dashboard</a></li>
-            <li><a href="{% url 'verify_doctors' %}">👨‍⚕️ Verify Doctors</a></li>
-            
-            <li><a href="{% url 'doctor_list' %}">🩺 Doctors</a></li>
-            <li><a href="{% url 'patient_list' %}">🧑 Patients</a></li>  
-            <li><a href="#">🏥 Departments</a></li>
-            <li><a href="#">📅 Appointments</a></li>
-            <li><a href="#">💳 Payments</a></li>
-            <li><a href="#">📊 Analytics</a></li>
-            <li><a href="#">📜 Audit Logs</a></li>
-            <li><a href="#">⚙️ System Settings</a></li>
+            <li><a href="{% url 'admin_dashboard' %}" class="active">🏠 Dashboard</a></li>
+            <li><a href="{% url 'verify_doctors' %}">✅ Verify Doctors</a></li>
+            <li><a href="{% url 'admin_doctor_list' %}">👨‍⚕️ Doctors</a></li>
+            <li><a href="{% url 'admin_refund_requests' %}">💰 Refund Requests</a></li>
+            <li><a href="{% url 'admin_payment_reports' %}">📊 Payment Reports</a></li>
+            <li><a href="{% url 'patient_list' %}">👥 Patients</a></li>
             <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
         </ul>
     </div>

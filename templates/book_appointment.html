@@ -1,26 +1,161 @@
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
-<h2>Book Appointment</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | Jago Health</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard_extra.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <style>
+        .form-container {
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-<form method="POST">
-    {% csrf_token %}
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-    <label>Select Doctor:</label>
-    <select name="doctor" required>
-        {% for doctor in doctors %}
-        <option value="{{ doctor.id }}">
-            {{ doctor.username }} - {{ doctor.specialization }}
-        </option>
-        {% endfor %}
-    </select>
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
 
-    <input type="date" name="date" min="{{ today }}" required>
-    <input type="time" name="time" required>
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
 
-    {% if error %}
-<p style="color:red;">{{ error }}</p>
-{% endif %}
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
 
-    <button type="submit">Request Appointment</button>
-</form>
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #004085;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Jago Health</h2>
+        <ul>
+            <li><a href="{% url 'patient_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'profile' %}">👤 My Profile</a></li>
+            <li><a href="{% url 'doctor_list' %}">🩺 Doctors</a></li>
+            <li><a href="{% url 'book_appointment' %}" class="active">📅 Book Appointment</a></li>
+            <li><a href="{% url 'patient_all_appointments' %}">📋 All Appointments</a></li>
+            <li><a href="{% url 'patient_prescriptions' %}">💊 Prescriptions</a></li>
+            <li><a href="{% url 'patient_payment_reports' %}">📊 Payment Reports</a></li>
+            <li><a href="{% url 'logout' %}">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <!-- Topbar -->
+        <div class="topbar">
+            <h2>📅 Book New Appointment</h2>
+            <p>Schedule an appointment with a doctor</p>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-container">
+            <div class="info-box">
+                <p>💡 Select a doctor, choose your preferred date and time, then submit to request an appointment. The doctor will review and approve it.</p>
+            </div>
+
+            {% if error %}
+                <div class="error-message">
+                    ⚠️ {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="doctor">👨‍⚕️ Select Doctor *</label>
+                    <select name="doctor" id="doctor" required>
+                        <option value="">-- Choose a Doctor --</option>
+                        {% for doctor in doctors %}
+                            <option value="{{ doctor.id }}">
+                                {{ doctor.get_full_name|default:doctor.username }} - {{ doctor.specialization }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">📅 Appointment Date *</label>
+                    <input type="date" name="date" id="date" min="{{ today }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">⏰ Appointment Time *</label>
+                    <input type="time" name="time" id="time" required>
+                </div>
+
+                <button type="submit" class="submit-btn">📅 Request Appointment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
